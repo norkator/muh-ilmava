@@ -5,7 +5,7 @@ MUH Ilmava Arduino temperature sensing hacks.
 
 Sensor placing
 ============
-Three temperature sensors labeled as R1, R2, R3 are placed in following way.  
+Temperature sensors labeled as R1, R2, R3, R4 are placed in following way.  
 `R1` - Incoming outside air.  
 `R2` - Outgoing air to rooms.  
 `R3` - Returning air from rooms.  
