@@ -8,7 +8,7 @@ Sensor placing
 Three temperature sensors labeled as R1, R2, R3 are placed in following way.  
 `R1` - Incoming outside air.  
 `R2` - Outgoing air to rooms.  
-`R3` - Returning air from rooms.
+`R3` - Returning air from rooms.  
 `R4` - After heating coil (used to heat air to avoid heat recovery cell to freeze).
   
 
