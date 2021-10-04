@@ -1,6 +1,9 @@
 # MUH Ilmava
 
-MUH Ilmava Arduino temperature sensing hacks.
+MUH Ilmava Arduino temperature sensing hacks, which idea is to learn from gathering temperature data how this unit works.  
+This repository code could possibly get some more "features" based on findings and learning curve.
+
+MUH Ilmava is a house ventilation system and this specific unit is very old one from ~1989.
 
 
 Sensor placing
