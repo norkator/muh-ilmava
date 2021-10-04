@@ -17,14 +17,16 @@
 Adafruit_SSD1306 display(OLED_RESET);
 
 // pins
-int thermistor_pin_1 = A1;
-int thermistor_pin_2 = A2;
-int thermistor_pin_3 = A3;
+int thermistor_pin_1 = A0;
+int thermistor_pin_2 = A1;
+int thermistor_pin_3 = A2;
+int thermistor_pin_4 = A3;
 
 // variables
 double incomingAirTemp = 0.0;
-double afterHeatingCoilAirTemp = 0.0;
-double heatRecoveryCellAirTemp = 0.0;
+double outgoingAirToRoomsTemp = 0.0;
+double returningRoomsAirTemp = 0.0;
+double afterHeatingCoilTemp = 0.0;
 
 unsigned long OLED_SCREEN_I2C_ADDRESS = 0x00;
 long timePreviousMeassure = 0;
@@ -52,11 +54,13 @@ void loop() {
     float t1 = analogRead(thermistor_pin_1);
     float t2 = analogRead(thermistor_pin_2);
     float t3 = analogRead(thermistor_pin_3);
+    float t4 = analogRead(thermistor_pin_4);
 
     incomingAirTemp = convertTemp(t1);
-    afterHeatingCoilAirTemp = convertTemp(t2);
-    heatRecoveryCellAirTemp = convertTemp(t3);
-
+    outgoingAirToRoomsTemp = convertTemp(t2);
+    returningRoomsAirTemp = convertTemp(t3);
+    afterHeatingCoilTemp = convertTemp(t4);
+    
     writeOledScreenText();
   }
 }
@@ -87,18 +91,20 @@ void writeOledScreenText() {
     display.setTextColor(WHITE);
     display.setTextSize(1);
     display.setCursor(0,0);
-    display.print("Incmg. air: ");
+    display.print("Incmg.air: ");
     display.print((String) incomingAirTemp);
     
     display.setTextSize(1);
     display.setCursor(0,5);
-    display.print("Aft. heCoil: ");
-    display.print((String) afterHeatingCoilAirTemp);
+    display.print("Out/In-R.: ");
+    display.print((String) outgoingAirToRoomsTemp);
+    display.print("/");
+    display.print((String) returningRoomsAirTemp);
 
     display.setTextSize(1);
     display.setCursor(0,10);
-    display.print("Aft. ht cell: ");
-    display.print((String) heatRecoveryCellAirTemp);
+    display.print("Aft.Ht.Coil: ");
+    display.print((String) afterHeatingCoilTemp);
 
     display.display();
   }
