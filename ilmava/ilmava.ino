@@ -16,6 +16,10 @@
 #define OLED_RESET 4
 Adafruit_SSD1306 display(OLED_RESET);
 
+// pins
+int thermistor_pin_1 = A1;
+int thermistor_pin_2 = A2;
+int thermistor_pin_3 = A3;
 
 // variables
 double incomingAirTemp = 0.0;
@@ -24,6 +28,10 @@ double heatRecoveryCellAirTemp = 0.0;
 
 unsigned long OLED_SCREEN_I2C_ADDRESS = 0x00;
 long timePreviousMeassure = 0;
+float BValue = 3470;
+float R1 = 5000;
+float T1 = 298.15;
+float e = 2.718281828;
 
 
 void setup() {  
@@ -40,9 +48,31 @@ void setup() {
 
 void loop() {
   if (millis() - timePreviousMeassure > 10000) {
-    // Todo.. read temperature probes here
+
+    float t1 = analogRead(thermistor_pin_1);
+    float t2 = analogRead(thermistor_pin_2);
+    float t3 = analogRead(thermistor_pin_3);
+
+    incomingAirTemp = convertTemp(t1);
+    afterHeatingCoilAirTemp = convertTemp(t2);
+    heatRecoveryCellAirTemp = convertTemp(t3);
+
     writeOledScreenText();
   }
+}
+
+
+/**
+ * Convert read value to °C
+ */
+double convertTemp(int measurement) {
+  float R2 = 1023 - measurement;
+  float a = 1/T1;
+  float b = log10(R1 / R2);
+  float c = b / log10(e);
+  float d = c / BValue ;
+  float T2 = 1 / (a - d);
+  return T2 - 273.15;
 }
 
 
