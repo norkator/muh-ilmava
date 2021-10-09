@@ -28,7 +28,8 @@
 // ## ETHERNET CONFIG ##
 EthernetClient client;
 byte mac[] = { 0xFA, 0xF4, 0x9A, 0xC7, 0xC6, 0xC2 }; // Mac address for ethernet nic
-const char* server  = "192.168.2.35";
+// const char* server  = "192.168.1.35";
+IPAddress server(192,168,1,106);
 const int port      = 3800; // API listening port
 const char* api     = "/device/v1/measurements"; // API route
 const unsigned long HTTP_TIMEOUT = 10000; // Timeout for http call
@@ -69,6 +70,8 @@ void setup() {
     Serial.println("Ethernet init ok.");
     Serial.println(Ethernet.localIP());
   }
+
+  delay(1000);
 }
 
 
@@ -141,8 +144,7 @@ void dhtRead() {
 void httpPostMeasurements() {
     if (httpSkip == 0) {
       Serial.print("Http callback");
-      if (connect(server)) {
-        Serial.print(server); Serial.print(":"); Serial.print(port); Serial.println(api);
+      if (connect()) {
         if (sendRequest(server, api) && skipResponseHeaders()) {
         }
         disconnect();
@@ -155,12 +157,9 @@ void httpPostMeasurements() {
 }
 
 // Open connection to the HTTP server
-bool connect(const char* hostName) {
-  Serial.println("");
-  Serial.print("Connecting to: ");
-  Serial.print(hostName); Serial.print(":"); Serial.print(port);
-  Serial.println("");
-  bool ok = client.connect(hostName, port);
+bool connect() {
+  Serial.println("Connecting to server");
+  bool ok = client.connect(server, port);
   Serial.println(ok ? "Connected" : "Connection Failed!");
   return ok;
 }
