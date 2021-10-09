@@ -25,17 +25,12 @@
 #include <dht.h>
 
 // --------------------------------------------------------------------------------
-// ## IP ADDRESS ##
-const char* serverAddress = "192.168.2.35";
-
-// --------------------------------------------------------------------------------
 // ## ETHERNET CONFIG ##
 EthernetClient client;
-EthernetServer ethernetServer(3800); // this specifies port
 byte mac[] = { 0xFA, 0xF4, 0x9A, 0xC7, 0xC6, 0xC2 }; // Mac address for ethernet nic
-const char* server  = serverAddress;
-const char* api     = "/device/v1/measurements"; // API route
+const char* server  = "192.168.2.35";
 const int port      = 3800; // API listening port
+const char* api     = "/device/v1/measurements"; // API route
 const unsigned long HTTP_TIMEOUT = 10000; // Timeout for http call
 const size_t MAX_CONTENT_SIZE = 124; // Must be incremented if http response comes out as null
 
