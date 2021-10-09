@@ -24,6 +24,12 @@ app.use(function (req, res, next) {
     next();
 });
 
+// Console log all
+router.use(function (req, res, next) {
+    console.log(req.method + req.url);
+    next();
+});
+
 app.use('/device/v1', router);
 router.post('/measurements', async function (req, res) {
     console.log(req.body);
