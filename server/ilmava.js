@@ -36,6 +36,6 @@ router.post('/measurements', async function (req, res) {
     res.json({status: 'received'});
 });
 
-app.listen(3800, () => {
-    console.log(`ilmava api listening at port 3800.`);
+app.listen(8080, () => {
+    console.log(`ilmava api listening at port 8080.`);
 });
