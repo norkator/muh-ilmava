@@ -1,5 +1,8 @@
 /**
  * MUH Ilmava Temperature monitoring screen
+ * Arduino: Mega2560
+ * Temperature sensors: 4 x DHT22
+ * + Ethernet Card
  *  
  *  Oled screen support
  *  To enable following screen support you need to install libs: "Adafruit BusIO", "Adafruit-GFX-Library" and "Adafruit_SSD1306"
@@ -10,73 +13,115 @@
  *     VDD -> 5v (Screen pin labeled as VCC or VDD)
  *
  */
-#include <Adafruit_SSD1306.h>
-#include <splash.h>
-#include <Wire.h>
-#define OLED_RESET 4
-Adafruit_SSD1306 display(OLED_RESET);
+// LIBRARIES
+// #include <ArduinoJson.h>
+// #include <SPI.h>
+// #include <Dhcp.h>
+// #include <Dns.h>
+// #include <Ethernet.h>
+// #include <EthernetClient.h>
+// #include <EthernetServer.h>
+// #include <EthernetUdp.h>
+#include <dht.h>
+// #include <Adafruit_SSD1306.h>
+// #include <splash.h>
+// #include <Wire.h>
+// #define OLED_RESET 4
+// Adafruit_SSD1306 display(OLED_RESET);
 
-// pins
-int thermistor_pin_1 = A0;
-int thermistor_pin_2 = A1;
-int thermistor_pin_3 = A2;
-int thermistor_pin_4 = A3;
+// --------------------------------------------------------------------------------
+// ## IP ADDRESS ##
+const char* serverAddress = "192.168.1.10";
 
-// variables
+// --------------------------------------------------------------------------------
+// ## PINS CONFIGURATION ##
+#define DHT22_1_PIN 50
+#define DHT22_2_PIN 51
+#define DHT22_3_PIN 52
+#define DHT22_4_PIN 53
+
+
+// --------------------------------------------------------------------------------
+// ## VARIABLES ##
+dht DHT;
 double incomingAirTemp = 0.0;
+int incomingAirHumidity = 0;
 double outgoingAirToRoomsTemp = 0.0;
+int outgoingAirToRoomsHumidity = 0;
 double returningRoomsAirTemp = 0.0;
+int returningRoomsAirHumidity = 0;
 double afterHeatingCoilTemp = 0.0;
-
-unsigned long OLED_SCREEN_I2C_ADDRESS = 0x00;
+int afterHeatingCoilHumidity = 0;
+// unsigned long OLED_SCREEN_I2C_ADDRESS = 0x00;
 long timePreviousMeassure = 0;
-float BValue = 3470;
-float R1 = 5000;
-float T1 = 298.15;
-float e = 2.718281828;
 
 
 void setup() {  
   Serial.begin(9600);
   delay(2000);
-  OLED_SCREEN_I2C_ADDRESS = findOledScreen();
-  if (OLED_SCREEN_I2C_ADDRESS != 0x00) {
-    Serial.println("--> " + OLED_SCREEN_I2C_ADDRESS);
-    display.begin(SSD1306_SWITCHCAPVCC, OLED_SCREEN_I2C_ADDRESS);
-    display.clearDisplay();
-  }
+  // OLED_SCREEN_I2C_ADDRESS = findOledScreen();
+  // if (OLED_SCREEN_I2C_ADDRESS != 0x00) {
+  //  Serial.println("--> " + OLED_SCREEN_I2C_ADDRESS);
+  //  display.begin(SSD1306_SWITCHCAPVCC, OLED_SCREEN_I2C_ADDRESS);
+  //  display.clearDisplay();
+  // }
 }
 
 
 void loop() {
   if (millis() - timePreviousMeassure > 10000) {
-
-    float t1 = analogRead(thermistor_pin_1);
-    float t2 = analogRead(thermistor_pin_2);
-    float t3 = analogRead(thermistor_pin_3);
-    float t4 = analogRead(thermistor_pin_4);
-
-    incomingAirTemp = convertTemp(t1);
-    outgoingAirToRoomsTemp = convertTemp(t2);
-    returningRoomsAirTemp = convertTemp(t3);
-    afterHeatingCoilTemp = convertTemp(t4);
-    
-    writeOledScreenText();
+    dhtRead(); 
+    // writeOledScreenText();
   }
 }
 
 
-/**
- * Convert read value to °C
- */
-double convertTemp(int measurement) {
-  float R2 = 1023 - measurement;
-  float a = 1/T1;
-  float b = log10(R1 / R2);
-  float c = b / log10(e);
-  float d = c / BValue ;
-  float T2 = 1 / (a - d);
-  return T2 - 273.15;
+
+// --------------------------------------------------------------------------------------------------------------------------
+// -------------------------------------A L L - S E N S O R - R E A D I N G - T A S K S -------------------------------------
+// --------------------------------------------------------------------------------------------------------------------------
+
+// Read DHT temperature and humidity
+void dhtRead() {  
+  int chk = DHT.read22(DHT22_1_PIN);  
+  incomingAirTemp = DHT.temperature;
+  incomingAirHumidity = (DHT.humidity * 2);
+  Serial.print("Incoming Air temp: ");
+  Serial.print(incomingAirTemp);
+  Serial.println("°C");
+  Serial.print("Incoming Air humidity: ");
+  Serial.print(incomingAirHumidity);
+  Serial.println("rH");
+
+  chk = DHT.read22(DHT22_2_PIN);  
+  outgoingAirToRoomsTemp = DHT.temperature;
+  outgoingAirToRoomsHumidity = (DHT.humidity * 2);
+  Serial.print("Outgoing Air To Rooms temp: ");
+  Serial.print(outgoingAirToRoomsTemp);
+  Serial.println("°C");
+  Serial.print("Outgoing Air To Rooms humidity: ");
+  Serial.print(outgoingAirToRoomsHumidity);
+  Serial.println("rH");
+
+  chk = DHT.read22(DHT22_3_PIN);  
+  returningRoomsAirTemp = DHT.temperature;
+  returningRoomsAirHumidity = (DHT.humidity * 2);
+  Serial.print("Returning Rooms Air temp: ");
+  Serial.print(returningRoomsAirTemp);
+  Serial.println("°C");
+  Serial.print("Returning Rooms Air humidity: ");
+  Serial.print(returningRoomsAirHumidity);
+  Serial.println("rH");
+
+  chk = DHT.read22(DHT22_4_PIN);  
+  afterHeatingCoilTemp = DHT.temperature;
+  afterHeatingCoilHumidity = (DHT.humidity * 2);
+  Serial.print("After Heating Coil temp: ");
+  Serial.print(afterHeatingCoilTemp);
+  Serial.println("°C");
+  Serial.print("After Heating Coil humidity: ");
+  Serial.print(afterHeatingCoilHumidity);
+  Serial.println("rH");
 }
 
 
@@ -84,6 +129,7 @@ double convertTemp(int measurement) {
  * Write oled screen content
  * Good tutorial: https://randomnerdtutorials.com/guide-for-oled-display-with-arduino/
  */
+ /*
 void writeOledScreenText() {
   if (OLED_SCREEN_I2C_ADDRESS != 0x00) {
     display.clearDisplay();
@@ -109,12 +155,14 @@ void writeOledScreenText() {
     display.display();
   }
 }
+*/
 
 
 /**
  * Find first responding i2c address
  * because we only have one i2c device connected (hopefully)
  */
+ /*
 long findOledScreen() {
   Serial.println ("Scanning for I2C Oled screen.");
   byte count = 0;
@@ -137,3 +185,4 @@ long findOledScreen() {
   }
   return 0x00;
 }
+*/
