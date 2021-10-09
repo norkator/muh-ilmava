@@ -14,20 +14,15 @@
  *
  */
 // LIBRARIES
-// #include <ArduinoJson.h>
-// #include <SPI.h>
-// #include <Dhcp.h>
-// #include <Dns.h>
-// #include <Ethernet.h>
-// #include <EthernetClient.h>
-// #include <EthernetServer.h>
-// #include <EthernetUdp.h>
+#include <ArduinoJson.h>
+#include <SPI.h>
+#include <Dhcp.h>
+#include <Dns.h>
+#include <Ethernet.h>
+#include <EthernetClient.h>
+#include <EthernetServer.h>
+#include <EthernetUdp.h>
 #include <dht.h>
-// #include <Adafruit_SSD1306.h>
-// #include <splash.h>
-// #include <Wire.h>
-// #define OLED_RESET 4
-// Adafruit_SSD1306 display(OLED_RESET);
 
 // --------------------------------------------------------------------------------
 // ## IP ADDRESS ##
@@ -58,13 +53,6 @@ long timePreviousMeassure = 0;
 
 void setup() {  
   Serial.begin(9600);
-  delay(2000);
-  // OLED_SCREEN_I2C_ADDRESS = findOledScreen();
-  // if (OLED_SCREEN_I2C_ADDRESS != 0x00) {
-  //  Serial.println("--> " + OLED_SCREEN_I2C_ADDRESS);
-  //  display.begin(SSD1306_SWITCHCAPVCC, OLED_SCREEN_I2C_ADDRESS);
-  //  display.clearDisplay();
-  // }
 }
 
 
@@ -126,66 +114,3 @@ void dhtRead() {
 
   Serial.println("------------------------------------");
 }
-
-
-/**
- * Write oled screen content
- * Good tutorial: https://randomnerdtutorials.com/guide-for-oled-display-with-arduino/
- */
- /*
-void writeOledScreenText() {
-  if (OLED_SCREEN_I2C_ADDRESS != 0x00) {
-    display.clearDisplay();
-
-    display.setTextColor(WHITE);
-    display.setTextSize(1);
-    display.setCursor(0,0);
-    display.print("Incmg.air: ");
-    display.print((String) incomingAirTemp);
-    
-    display.setTextSize(1);
-    display.setCursor(0,5);
-    display.print("Out/In-R.: ");
-    display.print((String) outgoingAirToRoomsTemp);
-    display.print("/");
-    display.print((String) returningRoomsAirTemp);
-
-    display.setTextSize(1);
-    display.setCursor(0,10);
-    display.print("Aft.Ht.Coil: ");
-    display.print((String) afterHeatingCoilTemp);
-
-    display.display();
-  }
-}
-*/
-
-
-/**
- * Find first responding i2c address
- * because we only have one i2c device connected (hopefully)
- */
- /*
-long findOledScreen() {
-  Serial.println ("Scanning for I2C Oled screen.");
-  byte count = 0;
-  Wire.begin();
-  for (byte i = 1; i < 127; i++) {
-    // Serial.println("Scanning " + i);
-    Wire.beginTransmission (i);
-    if (Wire.endTransmission () == 0) {
-           
-      Serial.print("Found i2c address: ");
-      Serial.print(i, DEC);
-      Serial.print(" | ");
-      Serial.println(i, HEX);
-      
-      return i;
-
-      count++;
-      delay (1); 
-      } 
-  }
-  return 0x00;
-}
-*/
