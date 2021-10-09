@@ -179,6 +179,32 @@ bool sendRequest(const char* host, const char* api) {
   JsonObject& root = jsonBuffer.createObject();
   JsonArray& data = root.createNestedArray("data");
 
+  JsonObject& incomingAirObj = jsonBuffer2.createObject();
+  incomingAirObj["name"] = "incoming_air";
+  incomingAirObj["temp"] = incomingAirTemp;
+  incomingAirObj["hum"] = incomingAirHumidity;
+
+  JsonObject& outgoingAirToRoomsObj = jsonBuffer2.createObject();
+  incomingAirObj["name"] = "outgoing_air_to_rooms";
+  incomingAirObj["temp"] = outgoingAirToRoomsTemp;
+  incomingAirObj["hum"] = outgoingAirToRoomsHumidity;
+
+  JsonObject& returningRoomsAirObj = jsonBuffer2.createObject();
+  incomingAirObj["name"] = "returning_rooms_air";
+  incomingAirObj["temp"] = returningRoomsAirTemp;
+  incomingAirObj["hum"] = returningRoomsAirHumidity;
+
+  JsonObject& afterHeatingCoilObj = jsonBuffer2.createObject();
+  incomingAirObj["name"] = "after_heating_coil";
+  incomingAirObj["temp"] = afterHeatingCoilTemp;
+  incomingAirObj["hum"] = afterHeatingCoilHumidity;
+
+  // Append to data array
+  data.add(incomingAirObj);
+  data.add(outgoingAirToRoomsObj);
+  data.add(returningRoomsAirObj);
+  data.add(afterHeatingCoilObj);
+
   String postData = "";
   root.printTo(postData);
   Serial.println(postData);
