@@ -70,6 +70,7 @@ void setup() {
 
 void loop() {
   if (millis() - timePreviousMeassure > 10000) {
+    timePreviousMeassure = millis();
     dhtRead(); 
     // writeOledScreenText();
   }
@@ -122,6 +123,8 @@ void dhtRead() {
   Serial.print("After Heating Coil humidity: ");
   Serial.print(afterHeatingCoilHumidity);
   Serial.println("rH");
+
+  Serial.println("------------------------------------");
 }
 
 
