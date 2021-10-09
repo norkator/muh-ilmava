@@ -26,7 +26,19 @@
 
 // --------------------------------------------------------------------------------
 // ## IP ADDRESS ##
-const char* serverAddress = "192.168.1.10";
+const char* serverAddress = "192.168.2.35";
+
+// --------------------------------------------------------------------------------
+// ## ETHERNET CONFIG ##
+EthernetClient client;
+EthernetServer ethernetServer(3800); // this specifies port
+byte mac[] = { 0xFA, 0xF4, 0x9A, 0xC7, 0xC6, 0xC2 }; // Mac address for ethernet nic
+const char* server  = serverAddress;
+const char* api     = "/device/v1/measurements"; // API route
+const int port      = 3800; // API listening port
+const unsigned long HTTP_TIMEOUT = 10000; // Timeout for http call
+const size_t MAX_CONTENT_SIZE = 124; // Must be incremented if http response comes out as null
+
 
 // --------------------------------------------------------------------------------
 // ## PINS CONFIGURATION ##
@@ -49,17 +61,27 @@ double afterHeatingCoilTemp = 0.0;
 int afterHeatingCoilHumidity = 0;
 // unsigned long OLED_SCREEN_I2C_ADDRESS = 0x00;
 long timePreviousMeassure = 0;
+int httpSkip = 0;
 
 
 void setup() {  
   Serial.begin(9600);
+
+  // init ethernet
+  if (!Ethernet.begin(mac)) { // DHCP
+    Serial.println("Ethernet configure failed!");
+  } else {
+    Serial.println("Ethernet init ok.");
+    Serial.println(Ethernet.localIP());
+  }
 }
 
 
 void loop() {
   if (millis() - timePreviousMeassure > 10000) {
     timePreviousMeassure = millis();
-    dhtRead(); 
+    dhtRead();
+    httpPostMeasurements();
     // writeOledScreenText();
   }
 }
@@ -113,4 +135,86 @@ void dhtRead() {
   Serial.println("rH");
 
   Serial.println("------------------------------------");
+}
+
+
+// --------------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------- H T T P - A P I - C A L L - T A S K --------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------------
+
+// Http post operation
+void httpPostMeasurements() {
+    if (httpSkip == 0) {
+      Serial.print("Http callback");
+      if (connect(server)) {
+        Serial.print(server); Serial.print(":"); Serial.print(port); Serial.println(api);
+        if (sendRequest(server, api) && skipResponseHeaders()) {
+        }
+        disconnect();
+      }
+    }
+    httpSkip = httpSkip + 1;
+    if (httpSkip == 6) {
+      httpSkip = 0; 
+    };
+}
+
+// Open connection to the HTTP server
+bool connect(const char* hostName) {
+  Serial.println("");
+  Serial.print("Connecting to: ");
+  Serial.print(hostName); Serial.print(":"); Serial.print(port);
+  Serial.println("");
+  bool ok = client.connect(hostName, port);
+  Serial.println(ok ? "Connected" : "Connection Failed!");
+  return ok;
+}
+
+// Send the HTTP POST request to the server, same time GET needed response data
+bool sendRequest(const char* host, const char* api) {
+  
+  // Construct json parameter object
+  StaticJsonBuffer<1200> jsonBuffer; // This seems not to affect anywhere
+  StaticJsonBuffer<500> jsonBuffer2; // Increment more based on Object count
+  JsonObject& root = jsonBuffer.createObject();
+  JsonArray& data = root.createNestedArray("data");
+
+  String postData = "";
+  root.printTo(postData);
+  Serial.println(postData);
+
+  // Http post
+  Serial.print("POST ");
+  Serial.println(api);
+  client.print("POST ");
+  client.print(api);
+  client.println(" HTTP/1.1");
+  client.print("Host: ");
+  client.println(server);
+  client.println("Content-Type: application/json");
+  client.println("User-Agent: Arduino/1.0");
+  client.println("Connection: close");
+  client.print("Content-Length: ");
+  client.println(postData.length());
+  client.println();
+  client.print(postData);
+  client.println();
+  
+  return true;
+}
+
+bool skipResponseHeaders() {
+  // HTTP headers end with an empty line
+  char endOfHeaders[] = "\r\n\r\n";
+  client.setTimeout(HTTP_TIMEOUT);
+  bool ok = client.find(endOfHeaders);
+  if (!ok) {
+    Serial.println("No response or invalid response!");
+  }
+  return ok;
+}
+
+void disconnect() {
+  Serial.println("Disconnect");
+  client.stop();
 }
