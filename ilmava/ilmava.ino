@@ -43,8 +43,8 @@ double outgoingAirToRoomsTemp = 0.0;
 int outgoingAirToRoomsHumidity = 0;
 double returningRoomsAirTemp = 0.0;
 int returningRoomsAirHumidity = 0;
-double afterHeatingCoilTemp = 0.0;
-int afterHeatingCoilHumidity = 0;
+double wasteAirOutTemp = 0.0;
+int wasteAirOutHumidity = 0;
 long timePreviousMeassure = 0;
 
 // --------------------------------------------------------------------------------
@@ -133,13 +133,13 @@ void dhtRead() {
   Serial.println("rH");
 
   chk = DHT.read22(DHT22_4_PIN);  
-  afterHeatingCoilTemp = DHT.temperature;
-  afterHeatingCoilHumidity = (DHT.humidity * 2);
-  Serial.print("After Heating Coil temp: ");
-  Serial.print(afterHeatingCoilTemp);
+  wasteAirOutTemp = DHT.temperature;
+  wasteAirOutHumidity = (DHT.humidity * 2);
+  Serial.print("Waste Air Out temp: ");
+  Serial.print(wasteAirOutTemp);
   Serial.println("°C");
-  Serial.print("After Heating Coil humidity: ");
-  Serial.print(afterHeatingCoilHumidity);
+  Serial.print("Waste Air Out humidity: ");
+  Serial.print(wasteAirOutHumidity);
   Serial.println("rH");
 
   Serial.println("------------------------------------");
@@ -208,16 +208,16 @@ bool sendRequest(const char* host, const char* api) {
   returningRoomsAirObj["temp"] = returningRoomsAirTemp;
   returningRoomsAirObj["hum"] = returningRoomsAirHumidity;
 
-  JsonObject& afterHeatingCoilObj = jsonBuffer2.createObject();
-  afterHeatingCoilObj["name"] = "after_heating_coil";
-  afterHeatingCoilObj["temp"] = afterHeatingCoilTemp;
-  afterHeatingCoilObj["hum"] = afterHeatingCoilHumidity;
+  JsonObject& wasteAirOutObj = jsonBuffer2.createObject();
+  wasteAirOutObj["name"] = "waste_air_out";
+  wasteAirOutObj["temp"] = wasteAirOutTemp;
+  wasteAirOutObj["hum"] = wasteAirOutHumidity;
 
   // Append to data array
   data.add(incomingAirObj);
   data.add(outgoingAirToRoomsObj);
   data.add(returningRoomsAirObj);
-  data.add(afterHeatingCoilObj);
+  data.add(wasteAirOutObj);
 
   String postData = "";
   root.printTo(postData);
