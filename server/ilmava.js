@@ -51,16 +51,16 @@ initDb.initDatabase().then(() => {
             const measurements = req.body;
             console.log(measurements);
 
-            const incomingAir = measurement.data.filter(f => {
+            const incomingAir = measurements.data.filter(f => {
                 return f.name === 'incoming_air'
             })[0];
-            const outgoingAirToRooms = measurement.data.filter(f => {
+            const outgoingAirToRooms = measurements.data.filter(f => {
                 return f.name === 'outgoing_air_to_rooms'
             })[0];
-            const returningRoomsAir = measurement.data.filter(f => {
+            const returningRoomsAir = measurements.data.filter(f => {
                 return f.name === 'returning_rooms_air'
             })[0];
-            const wasteAir = measurement.data.filter(f => {
+            const wasteAir = measurements.data.filter(f => {
                 return f.name === 'waste_air_out'
             })[0];
 
