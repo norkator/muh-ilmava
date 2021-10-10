@@ -5,10 +5,13 @@ require('console-stamp')(console);
 const express = require('express');
 const app = express();
 const router = express.Router();
+const initDb = require('./module/database');
 
 
-app.use(express.json());
-app.use(express.urlencoded({extended: true,}));
+initDb.initDatabase().then(() => {
+
+    app.use(express.json());
+    app.use(express.urlencoded({extended: true,}));
 
 // app.use(function (req, res, next) {
 //     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS ');
@@ -24,29 +27,51 @@ app.use(express.urlencoded({extended: true,}));
 //     next();
 // });
 
-app.use(function (req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    next();
-});
+    app.use(function (req, res, next) {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        next();
+    });
 
 // Console log all
-router.use(function (req, res, next) {
-    console.log(req.method + req.url);
-    next();
-});
+    router.use(function (req, res, next) {
+        console.log(req.method + req.url);
+        next();
+    });
 
-app.use('/', router);
-router.get('/', async function (req, res) {
-    console.log('device reported being alive');
-    res.json({status: 'received'});
-});
+    app.use('/', router);
+    router.get('/', async function (req, res) {
+        console.log('device reported being alive');
+        res.json({status: 'received'});
+    });
 
-app.use('/device/v1', router);
-router.post('/measurements', async function (req, res) {
-    console.log(req.body);
-    res.json({status: 'received'});
-});
+    app.use('/device/v1', router);
+    router.post('/measurements', async function (req, res) {
+        try {
+            const measurements = req.body;
 
-app.listen(8080, () => {
-    console.log(`ilmava api listening at port 8080.`);
+            const incomingAir = measurement.data.filter(f => {
+                return f.name === 'incoming_air'
+            })[0];
+            const outgoingAirToRooms = measurement.data.filter(f => {
+                return f.name === 'outgoing_air_to_rooms'
+            })[0];
+            const returningRoomsAir = measurement.data.filter(f => {
+                return f.name === 'returning_rooms_air'
+            })[0];
+            const wasteAir = measurement.data.filter(f => {
+                return f.name === 'waste_air_out'
+            })[0];
+
+
+        } catch (e) {
+            console.error(e);
+        }
+        res.json({status: 'received'});
+    });
+
+    app.listen(8080, () => {
+        console.log(`ilmava api listening at port 8080.`);
+    });
+
+
 });
