@@ -49,6 +49,7 @@ initDb.initDatabase().then(() => {
     router.post('/measurements', async function (req, res) {
         try {
             const measurements = req.body;
+            console.log(measurements);
 
             const incomingAir = measurement.data.filter(f => {
                 return f.name === 'incoming_air'
