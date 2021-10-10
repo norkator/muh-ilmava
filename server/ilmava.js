@@ -9,6 +9,7 @@ const initDb = require('./module/database');
 
 
 initDb.initDatabase().then(() => {
+    const sequelizeObjects = require('./module/sequelize');
 
     app.use(express.json());
     app.use(express.urlencoded({extended: true,}));
@@ -62,7 +63,16 @@ initDb.initDatabase().then(() => {
                 return f.name === 'waste_air_out'
             })[0];
 
-
+            sequelizeObjects.Measurement.create({
+                incoming_air_temperature: incomingAir.temp,
+                incoming_air_humidity: incomingAir.hum,
+                outgoing_air_to_rooms_temperature: outgoingAirToRooms.temp,
+                outgoing_air_to_rooms_humidity: outgoingAirToRooms.hum,
+                returning_rooms_air_temperature: returningRoomsAir.temp,
+                returning_rooms_air_humidity: returningRoomsAir.hum,
+                waste_air_out_temperature: wasteAir.temp,
+                waste_air_out_humidity: wasteAir.hum,
+            });
         } catch (e) {
             console.error(e);
         }
