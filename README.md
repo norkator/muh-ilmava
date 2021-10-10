@@ -39,6 +39,11 @@ Is located at `/server` folder. It's a simple express backend which takes data a
 Plotting
 ============
 For plotting data I used `Superset`. I run it locally with Docker as their documentation instructs.
+Get started with Superset [here](https://superset.apache.org/).
+
+Why Superset?
+* It doesn't no longer make sense to create custom plotting front end since Superset just gives you 
+so many possibilities.
 
 ![superset](./superset.png) 
 
