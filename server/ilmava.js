@@ -37,7 +37,7 @@ router.use(function (req, res, next) {
 
 app.use('/', router);
 router.get('/', async function (req, res) {
-    console.log('default get route called');
+    console.log('device reported being alive');
     res.json({status: 'received'});
 });
 
