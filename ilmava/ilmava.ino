@@ -48,6 +48,13 @@ int wasteAirOutHumidity = 0;
 long timePreviousMeassure = 0;
 
 // --------------------------------------------------------------------------------
+// ## "Calibration" ##
+static double INCOMING_AIR_T_CORRECTION = 1.2;
+static double OUTGOING_AIR_TO_ROOMS_T_CORRECTION = 0.9;
+static double RETURNING_ROOMS_AIR_T_CORRECTION = -0.6;
+static double WASTE_AIR_OUT_T_CORRECTION = 0.0;
+
+// --------------------------------------------------------------------------------
 // ## Ethernet config ##
 EthernetClient client;
 byte mac[] = { 0x2E, 0xA8, 0xA9, 0xB5, 0xDA, 0xF6 };
@@ -103,7 +110,7 @@ void loop() {
 // Read DHT temperature and humidity
 void dhtRead() {  
   int chk = DHT.read22(DHT22_1_PIN);  
-  incomingAirTemp = DHT.temperature;
+  incomingAirTemp = DHT.temperature + INCOMING_AIR_T_CORRECTION;
   incomingAirHumidity = (DHT.humidity * 2);
   Serial.print("Incoming Air temp: ");
   Serial.print(incomingAirTemp);
@@ -113,7 +120,7 @@ void dhtRead() {
   Serial.println("rH");
 
   chk = DHT.read22(DHT22_2_PIN);  
-  outgoingAirToRoomsTemp = DHT.temperature;
+  outgoingAirToRoomsTemp = DHT.temperature + OUTGOING_AIR_TO_ROOMS_T_CORRECTION;
   outgoingAirToRoomsHumidity = (DHT.humidity * 2);
   Serial.print("Outgoing Air To Rooms temp: ");
   Serial.print(outgoingAirToRoomsTemp);
@@ -123,7 +130,7 @@ void dhtRead() {
   Serial.println("rH");
 
   chk = DHT.read22(DHT22_3_PIN);  
-  returningRoomsAirTemp = DHT.temperature;
+  returningRoomsAirTemp = DHT.temperature + RETURNING_ROOMS_AIR_T_CORRECTION;
   returningRoomsAirHumidity = (DHT.humidity * 2);
   Serial.print("Returning Rooms Air temp: ");
   Serial.print(returningRoomsAirTemp);
@@ -133,7 +140,7 @@ void dhtRead() {
   Serial.println("rH");
 
   chk = DHT.read22(DHT22_4_PIN);  
-  wasteAirOutTemp = DHT.temperature;
+  wasteAirOutTemp = DHT.temperature + WASTE_AIR_OUT_T_CORRECTION;
   wasteAirOutHumidity = (DHT.humidity * 2);
   Serial.print("Waste Air Out temp: ");
   Serial.print(wasteAirOutTemp);
