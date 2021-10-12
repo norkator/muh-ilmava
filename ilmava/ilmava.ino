@@ -111,7 +111,7 @@ void loop() {
 void dhtRead() {  
   int chk = DHT.read22(DHT22_1_PIN);  
   incomingAirTemp = DHT.temperature + INCOMING_AIR_T_CORRECTION;
-  incomingAirHumidity = (DHT.humidity * 2);
+  incomingAirHumidity = DHT.humidity;
   Serial.print("Incoming Air temp: ");
   Serial.print(incomingAirTemp);
   Serial.println("°C");
@@ -121,7 +121,7 @@ void dhtRead() {
 
   chk = DHT.read22(DHT22_2_PIN);  
   outgoingAirToRoomsTemp = DHT.temperature + OUTGOING_AIR_TO_ROOMS_T_CORRECTION;
-  outgoingAirToRoomsHumidity = (DHT.humidity * 2);
+  outgoingAirToRoomsHumidity = DHT.humidity;
   Serial.print("Outgoing Air To Rooms temp: ");
   Serial.print(outgoingAirToRoomsTemp);
   Serial.println("°C");
@@ -131,7 +131,7 @@ void dhtRead() {
 
   chk = DHT.read22(DHT22_3_PIN);  
   returningRoomsAirTemp = DHT.temperature + RETURNING_ROOMS_AIR_T_CORRECTION;
-  returningRoomsAirHumidity = (DHT.humidity * 2);
+  returningRoomsAirHumidity = DHT.humidity;
   Serial.print("Returning Rooms Air temp: ");
   Serial.print(returningRoomsAirTemp);
   Serial.println("°C");
@@ -141,7 +141,7 @@ void dhtRead() {
 
   chk = DHT.read22(DHT22_4_PIN);  
   wasteAirOutTemp = DHT.temperature + WASTE_AIR_OUT_T_CORRECTION;
-  wasteAirOutHumidity = (DHT.humidity * 2);
+  wasteAirOutHumidity = DHT.humidity;
   Serial.print("Waste Air Out temp: ");
   Serial.print(wasteAirOutTemp);
   Serial.println("°C");
