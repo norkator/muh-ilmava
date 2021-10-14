@@ -1,10 +1,18 @@
 # MUH Ilmava
 
 MUH Ilmava Arduino temperature and humidity sensing hacks, 
-which idea is to learn from gathering temperature and humidity data how this unit works.
-Another purpose is to see how much this one heat transfer cell can gather heat and how much is dumped to `R4` channel.  
-This repository code could possibly get some more "features" based on findings and learning curve.
+which idea is to learn from gathering temperature and humidity data how this unit works and what can data analysis do.
+Another purpose is to see how much this one heat transfer cell can gather heat and how much is dumped to `R4` channel.
 
+See plotting for better image what you can plot with just few DHT22 sensors in each channel.
+  
+I am currently just waiting due need to gather a lot of data so this repository code could possibly get some more 
+"features" based on findings, learning curve and analysis of gathered material.
+
+
+
+Ilmava
+============
 MUH Ilmava is a house ventilation system and this specific unit is very old one from ~1989.
 
 
@@ -45,9 +53,7 @@ Why Superset?
 * It doesn't no longer make sense to create custom plotting front end since Superset just gives you 
 so many possibilities.
 
-![superset](./superset.png) 
-
-![plotting](./plotting.png) 
+![plotting](./full_plot.jpg) 
 
 
 
