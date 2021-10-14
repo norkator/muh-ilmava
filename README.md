@@ -61,6 +61,7 @@ is to find out how much heating coil has used kWh's of energy.
 `500` = coil watt rating.
 ```postgresql
 select
+    started::date,
     500 * (duration_minutes / 60) / 1000 as used_kwh
 from (
          select min("createdAt")                       as started,
