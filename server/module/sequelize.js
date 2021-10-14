@@ -3,7 +3,8 @@ const dotEnv = require('dotenv').config();
 
 
 // Models
-const MeasurementModel = require('../measurement');
+const MeasurementModel = require('../models/measurement');
+const ConsumptionModel = require('../models/consumption');
 
 
 // Sequelize instance
@@ -21,6 +22,7 @@ const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, pr
 
 // Initialize models
 const Measurement = MeasurementModel(sequelize, Sequelize);
+const Consumption = ConsumptionModel(sequelize, Sequelize);
 
 // Sync with database
 sequelize.sync()
@@ -32,4 +34,5 @@ sequelize.sync()
 // Export models
 module.exports = {
   Measurement,
+  Consumption,
 };
