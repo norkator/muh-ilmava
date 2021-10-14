@@ -17,6 +17,9 @@ const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, pr
     min: 0,
     idle: 10000
   },
+  logging: function (str) {
+    // console.log(str);
+  },
 });
 
 
