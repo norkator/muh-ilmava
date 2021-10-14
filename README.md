@@ -48,3 +48,33 @@ so many possibilities.
 ![superset](./superset.png) 
 
 ![plotting](./plotting.png) 
+
+
+
+Queries
+============
+
+
+Need
+----
+is to find out how much heating coil has used kWh's of energy.  
+`500` = coil watt rating.
+```postgresql
+select
+    500 * (duration_minutes / 60) / 1000 as used_kwh
+from (
+         select min("createdAt")                       as started,
+                max("createdAt")                       as ended,
+                EXTRACT(EPOCH FROM (max("createdAt") - min("createdAt"))::INTERVAL) /
+                60                                     as "duration_minutes",
+                avg(outgoing_air_to_rooms_temperature) as "avg_temp"
+         from measurements
+         where outgoing_air_to_rooms_temperature > 21
+           and outgoing_air_to_rooms_humidity < 27
+         group by "createdAt"::date
+     ) as m
+```
+
+Coil is not on the whole time so maybe right value is about 70% of it:
+
+![fluctuation](./fluctuation.png) 
