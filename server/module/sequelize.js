@@ -24,6 +24,7 @@ const sequelize = new Sequelize(process.env.DB_DATABASE, process.env.DB_USER, pr
 
 
 // Initialize models
+const Query = sequelize;
 const Measurement = MeasurementModel(sequelize, Sequelize);
 const Consumption = ConsumptionModel(sequelize, Sequelize);
 
@@ -36,6 +37,7 @@ sequelize.sync()
 
 // Export models
 module.exports = {
+  Query,
   Measurement,
   Consumption,
 };

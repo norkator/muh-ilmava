@@ -9,7 +9,7 @@ module.exports = (sequelize, type) => {
       type: type.STRING,
       allowNull: false,
     },
-    date: type.DATE,
+    date: type.DATEONLY,
     value: {
       type: type.DECIMAL, defaultValue: 0
     },
