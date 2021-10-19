@@ -106,6 +106,7 @@ initDb.initDatabase().then(async () => {
              from measurements
              where outgoing_air_to_rooms_temperature > 21
                and outgoing_air_to_rooms_humidity < 27
+               and "createdAt"::date != (SELECT CURRENT_DATE)
              group by "createdAt"::date
            ) as m
     `, null);
