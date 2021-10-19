@@ -89,7 +89,7 @@ initDb.initDatabase().then(async () => {
   });
 
   // await calculateCoilEnergyUse();
-  schedule.scheduleJob('*/240 * * * *', async () => {
+  schedule.scheduleJob('0 0 * * *', async () => {
     await calculateCoilEnergyUse();
   });
 
