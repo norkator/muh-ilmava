@@ -5,6 +5,11 @@
   "main": "ilmava.js",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "migrate": "sequelize db:migrate",
+    "migrate:status": "sequelize db:migrate:status",
+    "migration:generate": "sequelize migration:generate --name "
+  },
   "dependencies": {
     "console-stamp": "3.0.3",
     "dotenv": "10.0.0",
@@ -13,5 +18,8 @@
     "pg": "8.7.1",
     "pgtools": "0.3.2",
     "sequelize": "6.7.0"
+  },
+  "devDependencies": {
+    "sequelize-cli": "6.3.0"
   }
 }
