@@ -42,6 +42,21 @@ Backend
 ============
 Is located at `/server` folder. It's a simple express backend which takes data and stores it into PostgreSQL database. 
 
+#### Running backend
+Check db schema status
+```
+yarn migrate:status
+```
+Migrate to latest schema if needed
+```
+yarn migrate
+```
+Run backend. You should run it with something else like `PM2` process manager.
+```
+node ilmava.js
+```
+
+
 
 
 Plotting
