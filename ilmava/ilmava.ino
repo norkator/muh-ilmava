@@ -39,12 +39,24 @@
 dht DHT;
 double incomingAirTemp = 0.0;
 int incomingAirHumidity = 0;
+double incomingAirDioxide = 0.0;
+double incomingAirMonoxide = 0.0;
+
 double outgoingAirToRoomsTemp = 0.0;
 int outgoingAirToRoomsHumidity = 0;
+double outgoingAirToRoomsDioxide = 0.0;
+double outgoingAirToRoomsMonoxide = 0.0;
+
 double returningRoomsAirTemp = 0.0;
 int returningRoomsAirHumidity = 0;
+double returningRoomsAirDioxide = 0.0;
+double returningRoomsAirMonoxide = 0.0;
+
 double wasteAirOutTemp = 0.0;
 int wasteAirOutHumidity = 0;
+double wasteAirOutDioxide = 0.0;
+double wasteAirOutMonoxide = 0.0;
+
 long timePreviousMeassure = 0;
 
 // --------------------------------------------------------------------------------
@@ -68,9 +80,13 @@ const size_t MAX_CONTENT_SIZE = 1024; // Must be incremented if http response co
 // ## Task scheduler config ##
 Scheduler runner;
 void dhtRead();
+void dioxideRead();
+void monoxideRead();
 void httpPostRequest();
 Task t1(11 * 1000, TASK_FOREVER, &dhtRead);
-Task t2(30 * 1000, TASK_FOREVER, &httpPostRequest);    int httpSkip = 0; // Skip some
+Task t2(11 * 1000, TASK_FOREVER, &dioxideRead);
+Task t3(11 * 1000, TASK_FOREVER, &monoxideRead);
+Task t4(30 * 1000, TASK_FOREVER, &httpPostRequest);    int httpSkip = 0; // Skip some
 
 // --------------------------------------------------------------------------------
 
@@ -90,8 +106,12 @@ void setup() {
   runner.init();
   runner.addTask(t1);
   runner.addTask(t2);
+  runner.addTask(t3);
+  runner.addTask(t4);
   t1.enable();
   t2.enable();
+  t3.enable();
+  t4.enable();
 
   delay(5 * 1000);
 }
@@ -152,6 +172,13 @@ void dhtRead() {
   Serial.println("------------------------------------");
 }
 
+// Read carbon dioxide sensors
+void dioxideRead() {
+}
+
+// Read carbon monoxide sensors
+void monoxideRead() {
+}
 
 
 // --------------------------------------------------------------------------------------------------------------------------
@@ -204,21 +231,30 @@ bool sendRequest(const char* host, const char* api) {
   incomingAirObj["name"] = "incoming_air";
   incomingAirObj["temp"] = incomingAirTemp;
   incomingAirObj["hum"] = incomingAirHumidity;
+  // incomingAirObj["dioxide"] = incomingAirDioxide;
+  // incomingAirObj["monoxide"] = incomingAirMonoxide;
 
   JsonObject& outgoingAirToRoomsObj = jsonBuffer2.createObject();
   outgoingAirToRoomsObj["name"] = "outgoing_air_to_rooms";
   outgoingAirToRoomsObj["temp"] = outgoingAirToRoomsTemp;
   outgoingAirToRoomsObj["hum"] = outgoingAirToRoomsHumidity;
+  // outgoingAirToRoomsObj["dioxide"] = outgoingAirToRoomsDioxide;
+  // outgoingAirToRoomsObj["monoxide"] = outgoingAirToRoomsMonoxide;
 
   JsonObject& returningRoomsAirObj = jsonBuffer2.createObject();
   returningRoomsAirObj["name"] = "returning_rooms_air";
   returningRoomsAirObj["temp"] = returningRoomsAirTemp;
   returningRoomsAirObj["hum"] = returningRoomsAirHumidity;
+  returningRoomsAirObj["dioxide"] = returningRoomsAirDioxide;
+  // returningRoomsAirObj["monoxide"] = returningRoomsAirMonoxide;
+  
 
   JsonObject& wasteAirOutObj = jsonBuffer2.createObject();
   wasteAirOutObj["name"] = "waste_air_out";
   wasteAirOutObj["temp"] = wasteAirOutTemp;
   wasteAirOutObj["hum"] = wasteAirOutHumidity;
+  wasteAirOutObj["dioxide"] = wasteAirOutDioxide;
+  // wasteAirOutObj["monoxide"] = wasteAirOutMonoxide;
 
   // Append to data array
   data.add(incomingAirObj);
