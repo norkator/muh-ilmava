@@ -18,20 +18,6 @@ initDb.initDatabase().then(async () => {
   app.use(express.json());
   app.use(express.urlencoded({extended: true,}));
 
-// app.use(function (req, res, next) {
-//     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS ');
-//     res.header(
-//         'Access-Control-Allow-Headers',
-//         'Origin, X-Requested-With,' +
-//         ' Content-Type, Accept,' +
-//         ' Authorization,' +
-//         ' Access-Control-Allow-Credentials'
-//     );
-//     res.header('Access-Control-Allow-Credentials', 'true');
-//     res.header("Access-Control-Allow-Origin", "*");
-//     next();
-// });
-
   app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     next();
@@ -71,12 +57,24 @@ initDb.initDatabase().then(async () => {
       sequelizeObjects.Measurement.create({
         incoming_air_temperature: incomingAir.temp,
         incoming_air_humidity: incomingAir.hum,
+        incoming_air_carbon_dioxide: incomingAir.dioxide || null,
+        incoming_air_carbon_monoxide: incomingAir.monoxide || null,
+
         outgoing_air_to_rooms_temperature: outgoingAirToRooms.temp,
         outgoing_air_to_rooms_humidity: outgoingAirToRooms.hum,
+        outgoing_air_to_rooms_carbon_dioxide: outgoingAirToRooms.dioxide || null,
+        outgoing_air_to_rooms_carbon_monoxide: outgoingAirToRooms.monoxide || null,
+
         returning_rooms_air_temperature: returningRoomsAir.temp,
         returning_rooms_air_humidity: returningRoomsAir.hum,
+        returning_rooms_air_carbon_dioxide: returningRoomsAir.dioxide || null,
+        returning_rooms_air_carbon_monoxide: returningRoomsAir.monoxide || null,
+
         waste_air_out_temperature: wasteAir.temp,
         waste_air_out_humidity: wasteAir.hum,
+        waste_air_out_carbon_dioxide: wasteAir.dioxide || null,
+        waste_air_out_carbon_monoxide: wasteAir.monoxide || null,
+
       });
     } catch (e) {
       console.error(e);

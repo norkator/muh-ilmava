@@ -26,6 +26,5 @@ module.exports = (sequelize, type) => {
     waste_air_out_carbon_dioxide: type.DECIMAL,
     waste_air_out_carbon_monoxide: type.DECIMAL,
 
-
   })
 };
