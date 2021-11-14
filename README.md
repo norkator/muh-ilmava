@@ -34,6 +34,9 @@ Temperature|humidity sensors labeled as R1, R2, R3, R4 are placed in following w
 
 Schematic
 ============
+* I used regular 12v power supply to supply main input power. 
+* To avoid frying your Arduino regulator, you should use external power regulator like lm2596
+to provide 5v out for attached sensors.
 ![schematic_bb](./schematic_bb.png) 
 
 
@@ -41,6 +44,21 @@ Schematic
 Backend
 ============
 Is located at `/server` folder. It's a simple express backend which takes data and stores it into PostgreSQL database. 
+
+#### Running backend
+Check db schema status
+```
+yarn migrate:status
+```
+Migrate to latest schema if needed
+```
+yarn migrate
+```
+Run backend. You should run it with something else like `PM2` process manager.
+```
+node ilmava.js
+```
+
 
 
 
