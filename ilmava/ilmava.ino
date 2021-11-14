@@ -33,6 +33,10 @@
 #define DHT22_2_PIN 47
 #define DHT22_3_PIN 48
 #define DHT22_4_PIN 49
+// const int MQ135_1_PIN = A8;
+// const int MQ135_2_PIN = A9;
+const int MQ135_3_PIN = A10;
+// const int MQ135_4_PIN = A11;
 
 // --------------------------------------------------------------------------------
 // ## Variables ##
@@ -172,12 +176,14 @@ void dhtRead() {
   Serial.println("------------------------------------");
 }
 
-// Read carbon dioxide sensors
+// Read carbon dioxide sensors (MQ-135)
 void dioxideRead() {
+  returningRoomsAirDioxide = analogRead(MQ135_3_PIN);
 }
 
-// Read carbon monoxide sensors
+// Read carbon monoxide sensors (MQ-9)
 void monoxideRead() {
+  // currently don't have any
 }
 
 
