@@ -34,6 +34,9 @@ Temperature|humidity sensors labeled as R1, R2, R3, R4 are placed in following w
 
 Schematic
 ============
+* I used regular 12v power supply to supply main input power. 
+* To avoid frying your Arduino regulator, you should use external power regulator like lm2596
+to provide 5v out for attached sensors.
 ![schematic_bb](./schematic_bb.png) 
 
 
