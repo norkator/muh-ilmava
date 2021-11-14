@@ -179,6 +179,9 @@ void dhtRead() {
 // Read carbon dioxide sensors (MQ-135)
 void dioxideRead() {
   returningRoomsAirDioxide = analogRead(MQ135_3_PIN);
+  Serial.print("Returning Rooms Air carbon dioxide: ");
+  Serial.print(returningRoomsAirDioxide);
+  Serial.println(" PPM");
 }
 
 // Read carbon monoxide sensors (MQ-9)
