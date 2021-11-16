@@ -34,7 +34,7 @@
 #define DHT22_3_PIN 48
 #define DHT22_4_PIN 49
 // const int MQ135_1_PIN = A8;
-// const int MQ135_2_PIN = A9;
+const int MQ135_2_PIN = A9;
 const int MQ135_3_PIN = A10;
 // const int MQ135_4_PIN = A11;
 
@@ -178,6 +178,10 @@ void dhtRead() {
 
 // Read carbon dioxide sensors (MQ-135)
 void dioxideRead() {
+  outgoingAirToRoomsDioxide = analogRead(MQ135_2_PIN);
+  Serial.print("Outgoing Air To Rooms carbon dioxide: ");
+  Serial.print(outgoingAirToRoomsDioxide);
+  Serial.println(" PPM");
   returningRoomsAirDioxide = analogRead(MQ135_3_PIN);
   Serial.print("Returning Rooms Air carbon dioxide: ");
   Serial.print(returningRoomsAirDioxide);
@@ -247,7 +251,7 @@ bool sendRequest(const char* host, const char* api) {
   outgoingAirToRoomsObj["name"] = "outgoing_air_to_rooms";
   outgoingAirToRoomsObj["temp"] = outgoingAirToRoomsTemp;
   outgoingAirToRoomsObj["hum"] = outgoingAirToRoomsHumidity;
-  // outgoingAirToRoomsObj["dioxide"] = outgoingAirToRoomsDioxide;
+  outgoingAirToRoomsObj["dioxide"] = outgoingAirToRoomsDioxide;
   // outgoingAirToRoomsObj["monoxide"] = outgoingAirToRoomsMonoxide;
 
   JsonObject& returningRoomsAirObj = jsonBuffer2.createObject();
