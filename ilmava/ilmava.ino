@@ -42,8 +42,8 @@ const int MQ135_3_PIN = A10;
 // --------------------------------------------------------------------------------
 // ## Variables ##
 dht DHT;
-MQ135 mq2 = MQ135(MQ135_2_PIN);
-MQ135 mq3 = MQ135(MQ135_3_PIN);
+MQ135 mq2 = MQ135(MQ135_2_PIN, 50.00);
+MQ135 mq3 = MQ135(MQ135_3_PIN, 44.09);
 
 double incomingAirTemp = 0.0;
 int incomingAirHumidity = 0;
@@ -109,6 +109,13 @@ void setup() {
     Serial.println("Ethernet init ok.");
     Serial.println(Ethernet.localIP());
   }
+
+  // check rzeros for mq sensors 
+  float rzero_2 = mq2.getRZero();
+  float rzero_3 = mq3.getRZero();
+  Serial.println("MQ135 Rzeros");
+  Serial.println(rzero_2);
+  Serial.println(rzero_3);
 
   // init task scheduler
   runner.init();
