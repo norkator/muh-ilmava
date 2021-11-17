@@ -26,6 +26,7 @@
 #include <ArduinoJson.h>
 #include <dht.h>
 #include <TaskScheduler.h>
+#include <MQ135.h>
 
 // --------------------------------------------------------------------------------
 // ## Pins config ##
@@ -41,6 +42,9 @@ const int MQ135_3_PIN = A10;
 // --------------------------------------------------------------------------------
 // ## Variables ##
 dht DHT;
+MQ135 mq2 = MQ135(MQ135_2_PIN, 50.00);
+MQ135 mq3 = MQ135(MQ135_3_PIN, 44.09);
+
 double incomingAirTemp = 0.0;
 int incomingAirHumidity = 0;
 double incomingAirDioxide = 0.0;
@@ -106,12 +110,19 @@ void setup() {
     Serial.println(Ethernet.localIP());
   }
 
+  // check rzeros for mq sensors 
+  float rzero_2 = mq2.getRZero();
+  float rzero_3 = mq3.getRZero();
+  Serial.println("MQ135 Rzeros");
+  Serial.println(rzero_2);
+  Serial.println(rzero_3);
+
   // init task scheduler
   runner.init();
-  runner.addTask(t1);
-  runner.addTask(t2);
-  runner.addTask(t3);
-  runner.addTask(t4);
+  runner.addTask(t1); // dht
+  runner.addTask(t2); // dioxide
+  runner.addTask(t3); // monoxide
+  runner.addTask(t4); // http call
   t1.enable();
   t2.enable();
   t3.enable();
@@ -178,14 +189,19 @@ void dhtRead() {
 
 // Read carbon dioxide sensors (MQ-135)
 void dioxideRead() {
-  outgoingAirToRoomsDioxide = analogRead(MQ135_2_PIN);
+  // outgoingAirToRoomsDioxide = analogRead(MQ135_2_PIN);
+  outgoingAirToRoomsDioxide = mq2.getCorrectedPPM(outgoingAirToRoomsTemp, returningRoomsAirHumidity);
   Serial.print("Outgoing Air To Rooms carbon dioxide: ");
   Serial.print(outgoingAirToRoomsDioxide);
   Serial.println(" PPM");
-  returningRoomsAirDioxide = analogRead(MQ135_3_PIN);
+  
+  // returningRoomsAirDioxide = analogRead(MQ135_3_PIN);
+  returningRoomsAirDioxide = mq3.getCorrectedPPM(returningRoomsAirTemp, returningRoomsAirHumidity);
   Serial.print("Returning Rooms Air carbon dioxide: ");
   Serial.print(returningRoomsAirDioxide);
   Serial.println(" PPM");
+
+  Serial.println("------------------------------------");
 }
 
 // Read carbon monoxide sensors (MQ-9)
