@@ -42,8 +42,8 @@ const int MQ135_3_PIN = A10;
 // --------------------------------------------------------------------------------
 // ## Variables ##
 dht DHT;
-MQ135 mq2 = MQ135(MQ135_2_PIN, 50.00);
-MQ135 mq3 = MQ135(MQ135_3_PIN, 44.09);
+MQ135 mq2 = MQ135(MQ135_2_PIN, 80.00);
+MQ135 mq3 = MQ135(MQ135_3_PIN, 56.39);
 
 double incomingAirTemp = 0.0;
 int incomingAirHumidity = 0;
